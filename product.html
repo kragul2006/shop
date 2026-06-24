@@ -15,8 +15,12 @@
 }
 /* Ensure images fill their boxes and are cropped appropriately */
 .product-main-img, .product-thumb, .product-card-img { overflow: hidden; }
-.product-main-img img, .product-card-img img, .product-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.product-thumbs { display: flex; gap: 10px; }
+.product-main-img img, .product-card-img img, .product-thumb img { width: 100%; height: 100%; display: block; }
+/* Main gallery should fill and crop; product cards should show full image */
+.product-main-img img { object-fit: contain; background: #fff; }
+.product-card-img img { object-fit: contain; background: #fff; }
+.product-thumb img { object-fit: cover; }
+.product-thumbs { display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom:6px; }
 .product-thumb {
   width: 72px; height: 72px; border-radius: 4px; border: 2px solid var(--border);
   background: var(--cream); display: flex; align-items: center; justify-content: center;
@@ -104,6 +108,7 @@ if (!product) {
   let selVariant = product.variants[0];
   let qty = 1;
   let selImageIndex = 0;
+  let userSelectedImage = false;
 
   // Convert hex color to a human-friendly name (best-effort)
   function colorName(hex) {
@@ -148,6 +153,29 @@ if (!product) {
     return 'Red';
   }
 
+  // Find a color-mapped image from product.colorImages using flexible key matching
+  function findColorImage(color) {
+    if (!product || !product.colorImages) return undefined;
+    const cmap = product.colorImages;
+    const key = String(color || '').trim();
+    if (cmap[key]) return cmap[key];
+    const lowerKey = key.toLowerCase();
+    if (cmap[lowerKey]) return cmap[lowerKey];
+    // Try normalized hex (remove spaces, lowercase)
+    const norm = key.replace(/\s+/g,'').toLowerCase();
+    if (cmap[norm]) return cmap[norm];
+    // Try matching by friendly color name
+    const targetName = colorName(key).toLowerCase();
+    for (const k in cmap) {
+      if (!Object.prototype.hasOwnProperty.call(cmap,k)) continue;
+      try {
+        if (colorName(k).toLowerCase() === targetName) return cmap[k];
+      } catch(e) {}
+      if (String(k).toLowerCase() === targetName) return cmap[k];
+    }
+    return undefined;
+  }
+
   // Breadcrumb
   document.getElementById('breadcrumb').innerHTML = `<a href="index.html">Home</a> / <a href="products.html">Products</a> / <a href="products.html?cat=${encodeURIComponent(product.category)}">${product.category}</a> / ${product.name}`;
   document.title = `${product.name} — Sri Lakshmi Multi Shop`;
@@ -181,21 +209,7 @@ if (!product) {
 
         <p class="product-desc">${product.description}</p>
 
-        <!-- COLOUR -->
-        <div class="select-label">Colour: <span id="colorLabel">${colorName(selColor)}</span></div>
-        <div class="color-row">
-          ${product.colors.map(c=>`
-            <div class="color-swatch${selColor===c?' active':''}" style="background:${c}" onclick="pickColor('${c}')" title="${colorName(c)}" aria-label="${colorName(c)}"></div>
-          `).join('')}
-        </div>
-
-        <!-- VARIANT -->
-        <div class="select-label">Variant: <span>${selVariant}</span></div>
-        <div class="variant-row">
-          ${product.variants.map(v=>`
-            <button class="variant-btn${selVariant===v?' active':''}" onclick="pickVariant('${v}')">${v}</button>
-          `).join('')}
-        </div>
+        <!-- Color and variant selection removed -->
 
         <!-- QTY -->
         <div class="qty-section">
@@ -235,7 +249,7 @@ if (!product) {
         ${allProducts.filter(p=>p.id!==product.id&&p.category===product.category).slice(0,4).map(p=>{
           const rfp=Math.round(p.price*(1-p.discount/100));
           return `<a href="product.html?id=${p.id}" class="product-card">
-            <div class="product-card-img" style="height:160px">${productSVG(p.image,p.colors[0],110)}</div>
+            <div class="product-card-img" style="height:160px">${productSVG((p.images && p.images[0]) || p.image,p.colors[0],110)}</div>
             <div class="product-card-body">
               <div class="product-name" style="font-size:14px">${p.name}</div>
               <div class="product-price-row"><span class="product-price" style="font-size:16px">₹${rfp.toLocaleString()}</span></div>
@@ -257,8 +271,7 @@ if (!product) {
     const label = document.getElementById('colorLabel');
     if (label) label.textContent = colorName ? colorName(c) : c;
     // If there is a color-specific image, show it
-    const cmap = product.colorImages || {};
-    const mapped = cmap[selColor];
+    const mapped = findColorImage(selColor);
     if (mapped) {
       product.images = product.images || [];
       const idx = product.images.indexOf(mapped);
@@ -320,6 +333,7 @@ if (!product) {
 
     // renderAll will refresh the page and images
     showToast('Image(s) uploaded');
+    userSelectedImage = false;
     renderAll();
     });
   }
@@ -328,8 +342,8 @@ if (!product) {
   function renderImages() {
     const imgs = (product.images && product.images.length) ? product.images.slice() : (product.image ? [product.image] : []);
     try { console.log('renderImages imgs count', imgs.length, 'selColor', selColor); } catch(e) {}
-    if (product.colorImages && product.colorImages[selColor]) {
-      const mapped = product.colorImages[selColor];
+    const mapped = findColorImage(selColor);
+    if (mapped && !userSelectedImage) {
       if (imgs.indexOf(mapped) === -1) imgs.unshift(mapped);
       selImageIndex = imgs.indexOf(mapped);
     }
@@ -351,7 +365,7 @@ if (!product) {
       mainEl.innerHTML = src ? productSVG(src, selColor, 280) : productSVG(product.colors[0] || '', selColor, 280);
     }
 
-    const colorLbl = document.getElementById('colorLabel'); if (colorLbl) colorLbl.textContent = colorName(selColor);
+    // color label removed from UI
   }
 
   function removeProductImage() {
@@ -363,6 +377,7 @@ if (!product) {
       try { Store.save(allProducts); } catch(err) { console.warn(err); }
     }
     showToast('Image removed');
+    userSelectedImage = false;
     renderAll();
   }
 
@@ -370,7 +385,7 @@ if (!product) {
   window.removeProductImage = removeProductImage;
 
   // Image selection/removal helpers (multi-image)
-  function selectImage(i) { selImageIndex = i; renderAll(); }
+  function selectImage(i) { selImageIndex = i; userSelectedImage = true; renderAll(); }
   function removeImage(i) {
     if (!confirm('Remove this image?')) return;
     const removed = product.images.splice(i,1)[0];
@@ -380,7 +395,7 @@ if (!product) {
     const idx = allProducts.findIndex(p=>p.id===product.id);
     if (idx>=0) { allProducts[idx].images = product.images; allProducts[idx].colorImages = product.colorImages; allProducts[idx].image = product.images[0] || allProducts[idx].image || ''; try{ Store.save(allProducts);}catch(e){} }
     selImageIndex = Math.min(selImageIndex, (product.images||[]).length-1);
-    showToast('Image removed'); renderAll();
+    showToast('Image removed'); userSelectedImage = false; renderAll();
   }
 
   function assignImageToColor(i) {
@@ -389,7 +404,7 @@ if (!product) {
     if (!img) return; product.colorImages[selColor] = img;
     const idx = allProducts.findIndex(p=>p.id===product.id);
     if (idx>=0) { allProducts[idx].colorImages = product.colorImages; try{ Store.save(allProducts);}catch(e){} }
-    showToast('Assigned image to color'); renderAll();
+    showToast('Assigned image to color'); userSelectedImage = false; renderAll();
   }
 
   function removeAllProductImages() {
@@ -398,7 +413,7 @@ if (!product) {
     product.colorImages = {};
     const idx = allProducts.findIndex(p=>p.id===product.id);
     if (idx>=0) { allProducts[idx].images = []; allProducts[idx].colorImages = {}; allProducts[idx].image = allProducts[idx].image || ''; try{ Store.save(allProducts);}catch(e){} }
-    showToast('All images removed'); renderAll();
+    showToast('All images removed'); userSelectedImage = false; renderAll();
   }
 
   window.selectImage = selectImage; window.removeImage = removeImage; window.assignImageToColor = assignImageToColor; window.removeAllProductImages = removeAllProductImages;
