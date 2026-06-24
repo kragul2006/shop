@@ -11,7 +11,7 @@ const PRODUCTS = [
   { id:9, name:"Handwoven Jute Storage Basket", category:"Storage", price:899, discount:0, colors:["#C0A080","#8B4513"], variants:["Large","Medium"], description:"Durable jute basket ideal for laundry, toys, and general storage. Eco-friendly and breathable.", featured:false, isNew:false, image:"blouse", stock:70, reviews:[{author:"Soma R.",rating:5,comment:"Sturdy and looks great in my living room.",date:"2026-02-02"}] },
   { id:10, name:"Multipurpose Storage Organizer (6 bins)", category:"Storage", price:499, discount:0, colors:["#F0F0F0","#333333"], variants:["6 bins"], description:"Stackable fabric organizers with zip closures. Great for closets, shelves, and under-bed storage.", featured:false, isNew:true, image:"blouse", stock:140, reviews:[] },
   { id:11, name:"Ceramic Vase — Decorative", category:"Home Decor", price:899, discount:0, colors:["#DEB887","#8B4513"], variants:["One Size"], description:"Hand-finished ceramic vase with matte glaze — an understated accent for shelves and tables.", featured:false, isNew:true, image:"pooja", stock:36, reviews:[] },
-  { id:12, name:"Framed Wall Art — Botanical Print", category:"Home Decor", price:1499, discount:20, colors:["#2F4F4F","#6B8E23"], variants:["Small","Medium"], description:"Beautiful framed botanical print with lightweight frame and glass cover. Instant uplift for any wall.", featured:true, isNew:true, image:"jewellery", stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
+  { id:12, name:"Framed Wall Art — Botanical Print", category:"Home Decor", price:1499, discount:20, colors:["#2F4F4F","#6B8E23"], variants:["Small","Medium"], description:"Beautiful framed botanical print with lightweight frame and glass cover. Instant uplift for any wall.", featured:true, isNew:true, image:"https://imgs.search.brave.com/9_FQhEB8_k5CSoNuahAxqmsSHoLxkozDR-fMf_CCQuU/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zcGFj/ZXMuaW4vY2RuL3No/b3AvZmlsZXMvMTA4/MTIwNC0wOS5qcGc_/dj0xNzgxMDA5NzEw/JndpZHRoPTM3Mg", stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
 ];
 
 const CATEGORIES = ["All","Kitchenware","Home Decor","Storage","Bathroom utensils","Stationary","Cosmetics"];
@@ -68,7 +68,8 @@ function productSVG(type, color='#8B0000', size=120) {
   // If `type` looks like an image URL or file path, render an <img> tag instead of the SVG placeholder.
   if (typeof type === 'string' && (type.startsWith('http') || type.startsWith('data:') || type.includes('/') || /\.(png|jpe?g|gif|webp|svg)$/i.test(type))) {
     const src = type;
-    return `<img src="${src}" alt="" style="width:${size}px;height:${size}px;object-fit:cover;border-radius:6px;display:block"/>`;
+    // Let the container determine the sizing so images always fill their boxes.
+    return `<img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;max-width:none"/>`;
   }
   const d = {
     saree: `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" rx="8" fill="${color}" opacity=".08"/><path d="M20,90 Q40,30 60,20 Q80,10 100,30 L95,85 Q70,95 50,90 Z" fill="${color}" opacity=".7"/><path d="M22,92 Q42,32 62,22" stroke="${color}" stroke-width="2.5" fill="none" opacity=".5"/><line x1="30" y1="88" x2="90" y2="35" stroke="gold" stroke-width="1.8" opacity=".8"/><circle cx="96" cy="34" r="9" fill="gold" opacity=".55"/><circle cx="96" cy="34" r="5" fill="white" opacity=".3"/></svg>`,
