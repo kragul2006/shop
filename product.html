@@ -25,6 +25,11 @@
 .product-thumb { overflow: hidden; }
 .product-thumb.active { border-color: var(--crimson); }
 .product-thumb:hover { border-color: var(--crimson); }
+/* thumbnail action buttons */
+.product-thumb { position: relative; overflow: hidden; }
+.product-thumb .thumb-action { position: absolute; top: 6px; right: 34px; background: rgba(255,255,255,0.9); border: none; border-radius: 4px; padding: 4px 6px; font-size: 12px; cursor: pointer; display: none; }
+.product-thumb .thumb-action-del { right: 6px; color: #8B0000; }
+.product-thumb:hover .thumb-action, .product-thumb:hover .thumb-action-del { display: inline-block; }
 
 /* Info */
 .product-cat-tag { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--crimson); font-weight: 700; margin-bottom: 10px; }
@@ -113,14 +118,11 @@ if (!product) {
       <!-- GALLERY -->
       <div class="product-gallery">
         <div class="product-main-img" id="mainImg">
-          ${productSVG(product.image, selColor, 280)}
-        </div>
-        <div class="product-thumbs" id="thumbs">
-          ${product.colors.map((c,i)=>`
-            <div class="product-thumb${selColor===c?' active':''}" onclick="pickColor('${c}')">
-              ${productSVG(product.image,c,52)}
-            </div>`).join('')}
-        </div>
+            ${productSVG('', selColor, 280)}
+          </div>
+          <div class="product-thumbs" id="thumbs">
+            <!-- image thumbnails will be rendered by JS -->
+          </div>
       </div>
 
       <!-- INFO -->
@@ -138,7 +140,7 @@ if (!product) {
         <p class="product-desc">${product.description}</p>
 
         <!-- COLOUR -->
-        <div class="select-label">Colour: <span>${selColor}</span></div>
+        <div class="select-label">Colour: <span id="colorLabel">${selColor}</span></div>
         <div class="color-row">
           ${product.colors.map(c=>`
             <div class="color-swatch${selColor===c?' active':''}" style="background:${c}" onclick="pickColor('${c}')" title="${c}"></div>
@@ -172,9 +174,10 @@ if (!product) {
         </div>
         
         ${editMode?`<div style="margin-top:18px">
-          <input id="imageFileInput" type="file" accept="image/*" style="display:none" onchange="handleImageFile(event)">
-          <button class="btn btn-outline btn-md" onclick="document.getElementById('imageFileInput').click()">Upload Image</button>
-          <button class="btn btn-outline btn-md" style="margin-left:8px;background:#fff;color:#8B0000;border-color:#8B0000" onclick="removeProductImage()">Remove Image</button>
+          <input id="imageFileInput" type="file" accept="image/*" style="display:none" onchange="handleImageFile(event)" multiple>
+          <button class="btn btn-outline btn-md" onclick="document.getElementById('imageFileInput').click()">Upload Image(s)</button>
+          <label style="margin-left:12px;font-size:13px"><input id="assignToColor" type="checkbox" style="margin-right:8px">Assign to selected color</label>
+          <button class="btn btn-outline btn-md" style="margin-left:8px;background:#fff;color:#8B0000;border-color:#8B0000" onclick="removeAllProductImages()">Remove All Images</button>
         </div>`:''}
       </div>
     </div>
@@ -201,7 +204,28 @@ if (!product) {
     </div>`;
   }
 
-  function pickColor(c) { selColor=c; renderAll(); }
+  // Enhanced color picker: switch main image to color-assigned image when available
+  function pickColor(c) {
+    selColor=c;
+    // update color label
+    const label = document.getElementById('colorLabel');
+    if (label) label.textContent = colorName ? colorName(c) : c;
+    // If there is a color-specific image, show it
+    const cmap = product.colorImages || {};
+    const mapped = cmap[selColor];
+    if (mapped) {
+      product.images = product.images || [];
+      const idx = product.images.indexOf(mapped);
+      if (idx !== -1) selImageIndex = idx;
+      else { product.images.unshift(mapped); selImageIndex = 0; }
+      const idxAll = allProducts.findIndex(p=>p.id===product.id);
+      if (idxAll>=0) { allProducts[idxAll].images = product.images; allProducts[idxAll].colorImages = product.colorImages; allProducts[idxAll].image = product.images[0] || product.image || ''; try{ Store.save(allProducts);}catch(e){} }
+    } else {
+      // fallback to first image
+      selImageIndex = (product.images && product.images.length) ? 0 : 0;
+    }
+    renderAll();
+  }
   function pickVariant(v) { selVariant=v; renderAll(); }
   function changeQty(d) { qty=Math.max(1,Math.min(product.stock,qty+d)); document.getElementById('qtyNum').textContent=qty; }
   function toggleWish(btn) { btn.textContent=btn.textContent==='♡'?'♥':'♡'; showToast(btn.textContent==='♥'?'Added to wishlist!':'Removed from wishlist'); }
@@ -212,22 +236,35 @@ if (!product) {
   window.toggleWish=toggleWish;
 
   function handleImageFile(e) {
-    const file = e.target && e.target.files && e.target.files[0];
-    if (!file) return;
-    // limit size to 6MB to avoid excessive localStorage usage
-    if (file.size > 6 * 1024 * 1024) { showToast('Image too large (max 6MB)'); return; }
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      product.image = ev.target.result;
+    const files = e.target && e.target.files ? Array.from(e.target.files) : [];
+    if (!files.length) return;
+    const assign = document.getElementById('assignToColor') && document.getElementById('assignToColor').checked;
+    // limit each file size
+    const MAX = 6 * 1024 * 1024;
+    const readers = files.map(file => new Promise((res, rej)=>{
+      if (file.size > MAX) return rej(new Error('File too large'));
+      const r = new FileReader(); r.onload = ()=>res(r.result); r.onerror = ()=>rej(new Error('Read error')); r.readAsDataURL(file);
+    }));
+    Promise.allSettled(readers).then(results=>{
+      results.forEach((r, i)=>{
+        if (r.status!=='fulfilled') { showToast(`Skipped file ${files[i].name}`); return; }
+        product.images = product.images || [];
+        product.images.push(r.value);
+        if (assign) {
+          product.colorImages = product.colorImages || {};
+          product.colorImages[selColor] = r.value;
+        }
+      });
       const idx = allProducts.findIndex(p=>p.id===product.id);
-      if (idx >= 0) {
-        allProducts[idx].image = product.image;
+      if (idx>=0) {
+        allProducts[idx].images = product.images;
+        allProducts[idx].colorImages = product.colorImages;
+        allProducts[idx].image = product.images[0] || allProducts[idx].image || '';
         try { Store.save(allProducts); } catch(err) { console.warn(err); }
       }
-      showToast('Product image updated');
+      showToast('Image(s) uploaded');
       renderAll();
-    };
-    reader.readAsDataURL(file);
+    });
   }
 
   function removeProductImage() {
@@ -244,6 +281,40 @@ if (!product) {
 
   window.handleImageFile = handleImageFile;
   window.removeProductImage = removeProductImage;
+
+  // Image selection/removal helpers (multi-image)
+  function selectImage(i) { selImageIndex = i; renderAll(); }
+  function removeImage(i) {
+    if (!confirm('Remove this image?')) return;
+    const removed = product.images.splice(i,1)[0];
+    if (product.colorImages) {
+      Object.keys(product.colorImages).forEach(k=>{ if (product.colorImages[k]===removed) delete product.colorImages[k]; });
+    }
+    const idx = allProducts.findIndex(p=>p.id===product.id);
+    if (idx>=0) { allProducts[idx].images = product.images; allProducts[idx].colorImages = product.colorImages; allProducts[idx].image = product.images[0] || allProducts[idx].image || ''; try{ Store.save(allProducts);}catch(e){} }
+    selImageIndex = Math.min(selImageIndex, (product.images||[]).length-1);
+    showToast('Image removed'); renderAll();
+  }
+
+  function assignImageToColor(i) {
+    product.colorImages = product.colorImages || {};
+    const img = product.images && product.images[i];
+    if (!img) return; product.colorImages[selColor] = img;
+    const idx = allProducts.findIndex(p=>p.id===product.id);
+    if (idx>=0) { allProducts[idx].colorImages = product.colorImages; try{ Store.save(allProducts);}catch(e){} }
+    showToast('Assigned image to color'); renderAll();
+  }
+
+  function removeAllProductImages() {
+    if (!confirm('Remove all custom images?')) return;
+    product.images = [];
+    product.colorImages = {};
+    const idx = allProducts.findIndex(p=>p.id===product.id);
+    if (idx>=0) { allProducts[idx].images = []; allProducts[idx].colorImages = {}; allProducts[idx].image = allProducts[idx].image || ''; try{ Store.save(allProducts);}catch(e){} }
+    showToast('All images removed'); renderAll();
+  }
+
+  window.selectImage = selectImage; window.removeImage = removeImage; window.assignImageToColor = assignImageToColor; window.removeAllProductImages = removeAllProductImages;
 
   renderAll();
 }
