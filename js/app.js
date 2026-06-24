@@ -95,7 +95,56 @@ const PRODUCTS = [
     isNew:false,
     images:["https://rukminim2.flixcart.com/image/1396/1396/kae95e80/pencil/n/y/9/absolute-matt-magic-pencils-pack-of-5-50-pencils-apsara-original-imafryg5ttzpkwff.jpeg?q=90","https://rukminim2.flixcart.com/image/1396/1396/kae95e80/pencil/n/y/9/absolute-matt-magic-pencils-pack-of-5-50-pencils-apsara-original-imafryg53bqfafkh.jpeg?q=90"], stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
     
-
+    { id:12, name:"Camro Spoon 1 Pcs ",
+    category:"Kitchenware",
+    price:20, discount:0,
+    colors:[],
+    variants:[],
+    description:"PREMIUM STAINLESS STEEL: Crafted from high-quality stainless steel for lasting durability and rust resistance.", 
+    featured:false,
+    isNew:false,
+    images:["https://m.media-amazon.com/images/I/41hHyiQ3tzL._SX679_.jpg"], stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
+    
+    { id:13, name:"Stainless Steel Serving Spoon ",
+    category:"Kitchenware",
+    price:20, discount:0,
+    colors:[],
+    variants:[],
+    description:"Stainless Steel Serving Spoon for Rice, Biriyani & Pulao | Durable, Easy-to-Clean & Multi-Purpose Kitchen Ladle", 
+    featured:false,
+    isNew:false,
+    images:["https://m.media-amazon.com/images/I/41FyzFr-7FL._SX679_.jpg"], stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
+    
+    { id:14, name:"ROKERY (Pack of 6 150 ML) Glass Tea Cup",
+    category:"Kitchenware",
+    price:280, discount:0,
+    colors:[],
+    variants:[],
+    description:"Stainless Steel Serving Spoon for Rice, Biriyani & Pulao | Durable, Easy-to-Clean & Multi-Purpose Kitchen Ladle", 
+    featured:false,
+    isNew:false,
+    images:["https://rukminim2.flixcart.com/image/1396/1396/xif0q/glass/x/7/a/glass-coffee-mug-smilery-170-original-imagpmz846bx76k4.jpeg?q=90","https://rukminim2.flixcart.com/image/1396/1396/xif0q/glass/a/r/l/glass-tea-and-coffee-cup-set-transparent-mugs-for-hot-cold-original-imahdf6xrhzhhfcz.jpeg?q=90"], stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
+    
+  { id:15, name:"School and Office Lunch Bags",
+    category:"Home Goods",
+    price:120, discount:0,
+    colors:[],
+    variants:[],
+    description:"RIGHT CHOICE School and Office tiffin bags Lunch,Box,Bag, Keep Food Hot and Warm Waterproof Lunch Bag (Purple, Grey, 4 L)", 
+    featured:false,
+    isNew:false,
+    images:["https://rukminim2.flixcart.com/image/1396/1396/xif0q/bag/c/6/5/5-school-and-office-tiffin-bags-lunch-box-bag-keep-food-hot-and-original-imahmw2jtj4kjuy7.jpeg?q=90","https://rukminim2.flixcart.com/image/1396/1396/xif0q/bag/n/j/s/5-school-and-office-tiffin-bags-lunch-box-bag-keep-food-hot-and-original-imahmw2jyypax6yw.jpeg?q=90"], stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
+    
+    { id:16, name:"Plain Storage Basket",
+    category:"Storage",
+    price:60, discount:0,
+    colors:[],
+    variants:[],
+    description:"rendering Plain Storage Box. Sparks Basket with Lid 99", 
+    featured:false,
+    isNew:false,
+    images:["https://5.imimg.com/data5/SELLER/Default/2025/9/545270421/JL/ZF/NU/43799821/plain-storage-basket-500x500.jpg","https://5.imimg.com/data5/SELLER/Default/2025/9/545268799/CT/LL/VK/43799821/plain-storage-basket-500x500.jpg"], stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
+    
 ];
 
 const CATEGORIES = ["All","Kitchenware","Home Goods","Storage","Bathroom utensils","Stationary","Cosmetics"];
