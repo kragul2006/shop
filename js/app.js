@@ -1,6 +1,9 @@
 /* ─── PRODUCTS DATA STORE ─── */
 const PRODUCTS = [
-  { id:1, name:"1000 ML Stainless Steel Water Bottle", category:"Home Goods", price:190, discount:0, colors:["#FFF8DC"], variants:[], description:"AVATAR Stainless Steel Fridge/Refrigerator Bottle/Thunder is made of high quality stainless steel. It has a single wall high quality steel body with Plain design", featured:true, isNew:true, image:"https://m.media-amazon.com/images/I/41OsoH-pKUL._SS100_.jpg", stock:32, reviews:[{author:"Asha R.",rating:5,comment:"Beautiful finish and sturdy — loved it!",date:"2026-03-02"},{author:"Ravi K.",rating:4,comment:"Great value for the price.",date:"2026-04-10"}] },
+  { id:1, name:"1000 ML Stainless Steel Water Bottle", category:"Home Goods", price:190, discount:0, colors:["#FFF8DC"], variants:[], description:"AVATAR Stainless Steel Fridge/Refrigerator Bottle/Thunder is made of high quality stainless steel. It has a single wall high quality steel body with Plain design", featured:true, isNew:true, images: ["https://m.media-amazon.com/images/I/717hz1NRTPL._SY879_.jpg"],
+
+  
+stock:100, reviews:[{author:"Asha R.",rating:5,comment:"Beautiful finish and sturdy — loved it!",date:"2026-03-02"},{author:"Ravi K.",rating:4,comment:"Great value for the price.",date:"2026-04-10"}] },
   { id:2, name:"Stainless Steel Cookware Set (5 pcs)", category:"Kitchenware", price:4999, discount:20, colors:["#B8860B","#2F4F4F"], variants:["5 pcs"], description:"Premium stainless steel set with non-reactive interiors and induction-friendly bases. Oven-safe and easy to clean.", featured:true, isNew:false, image:"anklet", stock:18, reviews:[{author:"Manish P.",rating:5,comment:"Excellent heat distribution and durable build.",date:"2026-02-12"}] },
   { id:3, name:"Non-Slip Kitchen Mats (2 pcs)", category:"Kitchenware", price:699, discount:10, colors:["#F6F4EE","#2E2E2E"], variants:["2 pcs"], description:"Comfortable anti-fatigue mats for kitchen counters. Easy to clean and water-resistant backing for safety.", featured:false, isNew:true, image:"saree2", stock:60, reviews:[{author:"Geeta S.",rating:4,comment:"Makes long cooking sessions easier on the feet.",date:"2026-05-01"}] },
   { id:4, name:"LED Table Lamp with Dimmer", category:"Home Decor", price:2199, discount:10, colors:["#FFD700","#FFFFFF"], variants:["Single"], description:"Sleek LED lamp with adjustable brightness and warm-to-cool light modes. Perfect for bedside or study desks.", featured:true, isNew:true, image:"kids", stock:25, reviews:[{author:"Anil M.",rating:5,comment:"Lovely warm light and smooth dimmer.",date:"2026-03-22"}] },
@@ -12,7 +15,7 @@ const PRODUCTS = [
   { id:10, name:"Multipurpose Storage Organizer (6 bins)", category:"Storage", price:499, discount:0, colors:["#F0F0F0","#333333"], variants:["6 bins"], description:"Stackable fabric organizers with zip closures. Great for closets, shelves, and under-bed storage.", featured:false, isNew:true, image:"blouse", stock:140, reviews:[] },
   { id:11, name:"Ceramic Vase — Decorative", category:"Home Decor", price:899, discount:0, colors:["#DEB887","#8B4513"], variants:["One Size"], description:"Hand-finished ceramic vase with matte glaze — an understated accent for shelves and tables.", featured:false, isNew:true, image:"https://imgs.search.brave.com/nuoePjOOOvt8jlcEULjPw1xc_S1OakljPe-H07_uWsI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9ydWtt/aW5pbTIuZmxpeGNh/cnQuY29tL2ltYWdl/LzYxMi82MTIveGlm/MHEvYmF0aC10b3dl/bC9qLzEvYS9taWNy/b2ZpYmVyLXRvd2Vs/LXF1aWNrLWRyeS1z/dXBlci1hYnNvcmJl/bnQtY29yYWwtZmxl/ZWNlLWJhdGgtb3Jp/Z2luYWwtaW1haGty/ZGt3ZXE0ZnZuZC5q/cGVnP3E9NzA", stock:36, reviews:[] },
   { id:12, name:"F", category:"Home Decor", price:1499, discount:20, colors:["#2F4F4F","#238e5c"], variants:["Small","Medium"], description:"Beautiful framed botanical print with lightweight frame and glass cover. Instant uplift for any wall.", featured:false, isNew:true, image:"https://imgs.search.brave.com/9_FQhEB8_k5CSoNuahAxqmsSHoLxkozDR-fMf_CCQuU/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zcGFj/ZXMuaW4vY2RuL3No/b3AvZmlsZXMvMTA4/MTIwNC0wOS5qcGc_/dj0xNzgxMDA5NzEw/JndpZHRoPTM3Mg", stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
-  { id:13, name:"Water Bottle Kids(2L+700ML+300ML)", category:"Home Goods", price:349, discount:10, colors:["#e524cb","#0d79de","#e9340f"], variants:[], description:"ABC Water Bottles(2L+700ml+300ml) Leak-proof, BPA free Motivational Sports Bottle 3000 ml Plastic Bottle (Pack of 3, Multicolor)", featured:false, isNew:true, image:"https://rukminim2.flixcart.com/image/1536/1536/xif0q/bottle/z/a/m/3000-water-bottles-2l-700ml-300ml-leak-proof-bpa-free-enriched-2-original-imahygdvsfukkwxt.jpeg?q=90", stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
+  { id:13, name:"Water Bottle Kids(2L+700ML+300ML)", category:"Home Goods", price:300, discount:0, colors:["#e524cb","#0d79de","#e9340f"], variants:[], description:"ABC Water Bottles(2L+700ml+300ml) Leak-proof, BPA free Motivational Sports Bottle 3000 ml Plastic Bottle (Pack of 3, Multicolor)", featured:false, isNew:true, images:["https://rukminim2.flixcart.com/image/1536/1536/xif0q/bottle/z/a/m/3000-water-bottles-2l-700ml-300ml-leak-proof-bpa-free-enriched-2-original-imahygdvsfukkwxt.jpeg?q=90","https://rukminim2.flixcart.com/image/1396/1396/xif0q/bottle/l/f/u/3500-motivational-water-bottle-silicone-with-free-stickers-3-original-imahg742mcyyqqwy.jpeg?q=90"], stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
 
 ];
 
@@ -68,10 +71,15 @@ const FeedbackStore = {
 /* ─── SVG PRODUCT VISUAL ─── */
 function productSVG(type, color='#8B0000', size=120) {
   // If `type` looks like an image URL or file path, render an <img> tag instead of the SVG placeholder.
-  if (typeof type === 'string' && (type.startsWith('http') || type.startsWith('data:') || type.includes('/') || /\.(png|jpe?g|gif|webp|svg)$/i.test(type))) {
-    const src = type;
-    // Let the container determine the sizing so images always fill their boxes.
-    return `<img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;max-width:none"/>`;
+  if (typeof type === 'string') {
+    // Normalize Windows backslashes to forward slashes so local/relative paths work consistently.
+    const normalized = type.replace(/\\/g, '/');
+    const looksLikeImage = normalized.startsWith('http') || normalized.startsWith('data:') || normalized.includes('/') || /\.(png|jpe?g|gif|webp|svg)$/i.test(normalized);
+    if (looksLikeImage) {
+      const src = normalized;
+      // Let CSS control fitting; return a plain responsive <img> so containers decide object-fit.
+      return `<img src="${src}" alt="" style="width:100%;height:100%;display:block;max-width:none;border-radius:6px"/>`;
+    }
   }
   const d = {
     saree: `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" rx="8" fill="${color}" opacity=".08"/><path d="M20,90 Q40,30 60,20 Q80,10 100,30 L95,85 Q70,95 50,90 Z" fill="${color}" opacity=".7"/><path d="M22,92 Q42,32 62,22" stroke="${color}" stroke-width="2.5" fill="none" opacity=".5"/><line x1="30" y1="88" x2="90" y2="35" stroke="gold" stroke-width="1.8" opacity=".8"/><circle cx="96" cy="34" r="9" fill="gold" opacity=".55"/><circle cx="96" cy="34" r="5" fill="white" opacity=".3"/></svg>`,
@@ -132,7 +140,55 @@ function colorName(hex) {
   if (h < 330) return 'Pink';
   return 'Red';
 }
+/* ─── COLOR SELECTION HANDLER ─── */
+function initColorSelection() {
+  document.addEventListener('click', function(e) {
+    const colorBtn = e.target.closest('.color-btn');
+    if (!colorBtn) return;
+    
+    const productId = parseInt(colorBtn.dataset.productId);
+    const color = colorBtn.dataset.color;
+    const productCard = colorBtn.closest('.product-card');
+    
+    if (!productCard || !productId) return;
+    
+    // Update active state on color buttons
+    productCard.querySelectorAll('.color-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.color === color);
+    });
+    
+    // Find the product
+    const product = PRODUCTS.find(p => p.id === productId);
+    if (!product) return;
+    
+    // Update the product image
+    const imgContainer = productCard.querySelector('.product-image');
+    if (!imgContainer) return;
+    
+    // Check if color-specific image exists
+    if (product.colorImages && product.colorImages[color]) {
+      // Update with color-specific image
+      imgContainer.innerHTML = `<img src="${product.colorImages[color]}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;max-width:none"/>`;
+    } else {
+      // Fallback: try to use the first image or SVG
+      const imageType = product.image || product.images?.[0] || 'saree';
+      imgContainer.innerHTML = productSVG(imageType, color, 120, productId, color);
+    }
+    
+    // Also update the main image display if it exists separately
+    const mainImage = productCard.querySelector('.product-main-image');
+    if (mainImage && product.colorImages && product.colorImages[color]) {
+      mainImage.src = product.colorImages[color];
+    }
+  });
+}
 
+// Initialize color selection when DOM is ready
+document.addEventListener('DOMContentLoaded', ()=>{
+  initNavbar();
+  initScrollTop();
+  initColorSelection(); // Add this line
+});
 /* ─── SHARED NAVBAR ─── */
 function renderNavbar(activePage) {
   return `
