@@ -103,6 +103,50 @@ if (!product) {
   let selColor = product.colors[0];
   let selVariant = product.variants[0];
   let qty = 1;
+  let selImageIndex = 0;
+
+  // Convert hex color to a human-friendly name (best-effort)
+  function colorName(hex) {
+    if (!hex) return '';
+    const s = String(hex).trim().toLowerCase();
+    // known mappings for common palette in this project
+    const map = {
+      '#fff8dc':'cream','#ffffff':'white','#000000':'black','#8b0000':'crimson','#b8860b':'gold',
+      '#6b3fa0':'purple','#c0006b':'magenta','#c75000':'orange','#ffd700':'gold','#f5f5f5':'off white',
+      '#20b2aa':'teal','#ff69b4':'pink','#c0a080':'tan','#deb887':'burlywood','#8b4513':'brown',
+      '#2f4f4f':'charcoal','#2e2e2e':'dark gray','#6b8e23':'olive','#1a6b1a':'forest green'
+    };
+    if (map[s]) return map[s].charAt(0).toUpperCase()+map[s].slice(1);
+    // fallback: estimate by HSL
+    function hexToRgb(h) {
+      let v = h.replace('#',''); if (v.length===3) v = v.split('').map(x=>x+x).join('');
+      const n = parseInt(v,16); return {r:(n>>16)&255, g:(n>>8)&255, b:n&255};
+    }
+    const {r,g,b} = hexToRgb(s);
+    const rn=r/255, gn=g/255, bn=b/255;
+    const max=Math.max(rn,gn,bn), min=Math.min(rn,gn,bn);
+    let h=0, s2=0, l=(max+min)/2;
+    if (max!==min) {
+      const d = max-min; s2 = l>0.5 ? d/(2-max-min) : d/(max+min);
+      switch(max){case rn: h=(gn-bn)/d + (gn<bn?6:0); break; case gn: h=(bn-rn)/d + 2; break; default: h=(rn-gn)/d + 4;}
+      h = Math.round(h*60);
+    }
+    if (s2 < 0.12) {
+      if (l > 0.9) return 'White';
+      if (l < 0.12) return 'Black';
+      return 'Gray';
+    }
+    // hue buckets
+    if (h < 15 || h >= 345) return 'Red';
+    if (h < 45) return 'Orange';
+    if (h < 70) return 'Yellow';
+    if (h < 150) return 'Green';
+    if (h < 200) return 'Teal';
+    if (h < 260) return 'Blue';
+    if (h < 290) return 'Purple';
+    if (h < 330) return 'Pink';
+    return 'Red';
+  }
 
   // Breadcrumb
   document.getElementById('breadcrumb').innerHTML = `<a href="index.html">Home</a> / <a href="products.html">Products</a> / <a href="products.html?cat=${encodeURIComponent(product.category)}">${product.category}</a> / ${product.name}`;
@@ -120,9 +164,7 @@ if (!product) {
         <div class="product-main-img" id="mainImg">
             ${productSVG('', selColor, 280)}
           </div>
-          <div class="product-thumbs" id="thumbs">
-            <!-- image thumbnails will be rendered by JS -->
-          </div>
+          <div class="product-thumbs" id="thumbs"></div>
       </div>
 
       <!-- INFO -->
@@ -140,10 +182,10 @@ if (!product) {
         <p class="product-desc">${product.description}</p>
 
         <!-- COLOUR -->
-        <div class="select-label">Colour: <span id="colorLabel">${selColor}</span></div>
+        <div class="select-label">Colour: <span id="colorLabel">${colorName(selColor)}</span></div>
         <div class="color-row">
           ${product.colors.map(c=>`
-            <div class="color-swatch${selColor===c?' active':''}" style="background:${c}" onclick="pickColor('${c}')" title="${c}"></div>
+            <div class="color-swatch${selColor===c?' active':''}" style="background:${c}" onclick="pickColor('${c}')" title="${colorName(c)}" aria-label="${colorName(c)}"></div>
           `).join('')}
         </div>
 
@@ -202,6 +244,10 @@ if (!product) {
         }).join('')}
       </div>
     </div>`;
+    // populate images/thumbnails after rendering DOM
+    if (typeof renderImages === 'function') renderImages();
+    // debug info: product summary
+    try { console.log('PRODUCT DETAIL:', { id: product.id, name: product.name, image: product.image, images: product.images, colorImages: product.colorImages }); } catch(e) {}
   }
 
   // Enhanced color picker: switch main image to color-assigned image when available
@@ -218,22 +264,31 @@ if (!product) {
       const idx = product.images.indexOf(mapped);
       if (idx !== -1) selImageIndex = idx;
       else { product.images.unshift(mapped); selImageIndex = 0; }
-      const idxAll = allProducts.findIndex(p=>p.id===product.id);
-      if (idxAll>=0) { allProducts[idxAll].images = product.images; allProducts[idxAll].colorImages = product.colorImages; allProducts[idxAll].image = product.images[0] || product.image || ''; try{ Store.save(allProducts);}catch(e){} }
-    } else {
-      // fallback to first image
-      selImageIndex = (product.images && product.images.length) ? 0 : 0;
+      const idx2 = allProducts.findIndex(p=>p.id===product.id);
+      if (idx2>=0) {
+        allProducts[idx2].images = product.images;
+        allProducts[idx2].colorImages = product.colorImages;
+        allProducts[idx2].image = product.images[0] || allProducts[idx2].image || '';
+        try { Store.save(allProducts); } catch(err) { console.warn(err); }
+      }
+      const inputEl = document.getElementById('imageFileInput'); if (inputEl) inputEl.value = '';
+      showToast('Image(s) uploaded');
+      renderAll();
     }
+  }
+
+  function pickVariant(v) {
+    selVariant = v;
     renderAll();
   }
-  function pickVariant(v) { selVariant=v; renderAll(); }
-  function changeQty(d) { qty=Math.max(1,Math.min(product.stock,qty+d)); document.getElementById('qtyNum').textContent=qty; }
-  function toggleWish(btn) { btn.textContent=btn.textContent==='♡'?'♥':'♡'; showToast(btn.textContent==='♥'?'Added to wishlist!':'Removed from wishlist'); }
 
-  window.pickColor=pickColor;
-  window.pickVariant=pickVariant;
-  window.changeQty=changeQty;
-  window.toggleWish=toggleWish;
+  function changeQty(d) { qty = Math.max(1, Math.min(product.stock, qty + d)); const qEl = document.getElementById('qtyNum'); if (qEl) qEl.textContent = qty; }
+  function toggleWish(btn) { btn.textContent = btn.textContent==='♡' ? '♥' : '♡'; showToast(btn.textContent==='♥' ? 'Added to wishlist!' : 'Removed from wishlist'); }
+
+  window.pickColor = pickColor;
+  window.pickVariant = pickVariant;
+  window.changeQty = changeQty;
+  window.toggleWish = toggleWish;
 
   function handleImageFile(e) {
     const files = e.target && e.target.files ? Array.from(e.target.files) : [];
@@ -262,9 +317,41 @@ if (!product) {
         allProducts[idx].image = product.images[0] || allProducts[idx].image || '';
         try { Store.save(allProducts); } catch(err) { console.warn(err); }
       }
-      showToast('Image(s) uploaded');
-      renderAll();
+
+    // renderAll will refresh the page and images
+    showToast('Image(s) uploaded');
+    renderAll();
     });
+  }
+
+  // Render thumbnails and main image from product.images / product.image
+  function renderImages() {
+    const imgs = (product.images && product.images.length) ? product.images.slice() : (product.image ? [product.image] : []);
+    try { console.log('renderImages imgs count', imgs.length, 'selColor', selColor); } catch(e) {}
+    if (product.colorImages && product.colorImages[selColor]) {
+      const mapped = product.colorImages[selColor];
+      if (imgs.indexOf(mapped) === -1) imgs.unshift(mapped);
+      selImageIndex = imgs.indexOf(mapped);
+    }
+    if (!Number.isInteger(selImageIndex) || selImageIndex < 0) selImageIndex = 0;
+
+    const thumbsEl = document.getElementById('thumbs');
+    if (thumbsEl) {
+      thumbsEl.innerHTML = imgs.map((img,i)=>`
+        <div class="product-thumb ${selImageIndex===i? ' active':''}">
+          <div style="width:100%;height:100%" onclick="selectImage(${i})">${productSVG(img, product.colors[0], 52)}</div>
+          ${editMode?`<button class="thumb-action" onclick="assignImageToColor(${i})">Assign</button><button class="thumb-action-del" onclick="removeImage(${i})">Del</button>`:''}
+        </div>
+      `).join('');
+    }
+
+    const mainEl = document.getElementById('mainImg');
+    if (mainEl) {
+      const src = (imgs && imgs.length) ? imgs[selImageIndex] : (product.image || '');
+      mainEl.innerHTML = src ? productSVG(src, selColor, 280) : productSVG(product.colors[0] || '', selColor, 280);
+    }
+
+    const colorLbl = document.getElementById('colorLabel'); if (colorLbl) colorLbl.textContent = colorName(selColor);
   }
 
   function removeProductImage() {
