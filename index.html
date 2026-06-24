@@ -200,10 +200,10 @@
   <div class="container">
     <div class="section-title">
       <span class="ornament">❋ ❋ ❋</span>
-      <h2>New Arrivals</h2>
-      <p>Fresh additions to our store — be the first to grab them</p>
+      <h2>All Products</h2>
+      <p>Browse our full catalog — all available products listed below</p>
     </div>
-    <div class="grid-auto-4" id="newGrid"></div>
+    <div class="product-grid" id="allGrid"></div>
   </div>
 </section>
 
@@ -233,7 +233,7 @@ initNavbar();
 const products = Store.getAll();
 const CATS_META = [
   {name:'Kitchenware',icon:'saree',col:'#8B0000'},
-  {name:'Home Decor',icon:'jewellery',col:'#B8860B'},
+  {name:'Home Goods',icon:'jewellery',col:'#B8860B'},
   {name:'Storage',icon:'blouse',col:'#6B3FA0'},
   {name:'Bathroom utensils',icon:'pooja',col:'#1a6b1a'},
   {name:'Stationary',icon:'kids',col:'#c0006b'},
@@ -252,12 +252,12 @@ catGrid.innerHTML = CATS_META.map(c => {
 }).join('');
 
 // Featured
-const featured = products.filter(p=>p.featured).slice(0,3);
+const featured = products.filter(p=>p.featured);
 document.getElementById('featuredGrid').innerHTML = featured.map(p => {
   const fp = Math.round(p.price*(1-p.discount/100));
   return `<a href="product.html?id=${p.id}" class="product-card">
     <div class="product-card-img">
-      ${productSVG(p.image,p.colors[0],150)}
+      ${productSVG((p.images && p.images[0]) || p.image,p.colors[0],150)}
       <div class="badge-stack">
         <span class="badge badge-featured">Featured</span>
         ${p.discount>0?`<span class="badge badge-sale">${p.discount}% off</span>`:''}
@@ -272,7 +272,7 @@ document.getElementById('featuredGrid').innerHTML = featured.map(p => {
         <span class="product-price">₹${fp.toLocaleString()}</span>
         ${p.discount>0?`<span class="product-original">₹${p.price.toLocaleString()}</span>`:''}
       </div>
-      <div class="product-colors">${p.colors.slice(0,5).map(c=>`<div class="product-swatch" style="background:${c}"></div>`).join('')}</div>
+      <div class="product-colors">${p.colors.map(c=>`<div class="product-swatch" style="background:${c}" title="${typeof colorName==='function'?colorName(c):c}" aria-label="${typeof colorName==='function'?colorName(c):c}"></div>`).join('')}</div>
     </div>
   </a>`;
 }).join('');
@@ -281,7 +281,7 @@ document.getElementById('featuredGrid').innerHTML = featured.map(p => {
 const hero = products.find(p=>p.featured&&p.discount>0) || products[0];
 const heroFP = Math.round(hero.price*(1-hero.discount/100));
 document.getElementById('heroProduct').innerHTML = `
-  <div class="featured-hero-visual">${productSVG(hero.image,hero.colors[0],240)}</div>
+  <div class="featured-hero-visual">${productSVG((hero.images && hero.images[0]) || hero.image,hero.colors[0],240)}</div>
   <div class="featured-hero-info">
     <div class="label-top">⭐ Spotlight Pick</div>
     <h3>${hero.name}</h3>
@@ -290,13 +290,13 @@ document.getElementById('heroProduct').innerHTML = `
     <a href="product.html?id=${hero.id}" class="btn btn-primary btn-md">View Product</a>
   </div>`;
 
-// New arrivals
-const newest = products.filter(p=>p.isNew).slice(0,4);
+// New arrivals (show all products)
+const newest = products;
 document.getElementById('newGrid').innerHTML = newest.map(p => {
   const fp = Math.round(p.price*(1-p.discount/100));
   return `<a href="product.html?id=${p.id}" class="product-card">
     <div class="product-card-img" style="height:180px">
-      ${productSVG(p.image,p.colors[0],110)}
+      ${productSVG((p.images && p.images[0]) || p.image,p.colors[0],110)}
       <div class="badge-stack"><span class="badge badge-new">New</span></div>
     </div>
     <div class="product-card-body">
