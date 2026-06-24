@@ -1,6 +1,6 @@
 /* ─── PRODUCTS DATA STORE ─── */
 const PRODUCTS = [
-  { id:1, name:"Ceramic Dinner Set (24 pcs)", category:"Kitchenware", price:3499, discount:15, colors:["#FFF8DC","#D2691E","#8B4513"], variants:["24 pcs"], description:"Elegant ceramic dinner set with durable glaze and modern patterns. Ideal for daily meals and special gatherings.", featured:true, isNew:true, image:"jewellery", stock:32, reviews:[{author:"Asha R.",rating:5,comment:"Beautiful finish and sturdy — loved it!",date:"2026-03-02"},{author:"Ravi K.",rating:4,comment:"Great value for the price.",date:"2026-04-10"}] },
+  { id:1, name:"1000 ML Stainless Steel Water Bottle", category:"Home Goods", price:190, discount:0, colors:["#FFF8DC"], variants:[], description:"AVATAR Stainless Steel Fridge/Refrigerator Bottle/Thunder is made of high quality stainless steel. It has a single wall high quality steel body with Plain design", featured:true, isNew:true, image:"https://m.media-amazon.com/images/I/41OsoH-pKUL._SS100_.jpg", stock:32, reviews:[{author:"Asha R.",rating:5,comment:"Beautiful finish and sturdy — loved it!",date:"2026-03-02"},{author:"Ravi K.",rating:4,comment:"Great value for the price.",date:"2026-04-10"}] },
   { id:2, name:"Stainless Steel Cookware Set (5 pcs)", category:"Kitchenware", price:4999, discount:20, colors:["#B8860B","#2F4F4F"], variants:["5 pcs"], description:"Premium stainless steel set with non-reactive interiors and induction-friendly bases. Oven-safe and easy to clean.", featured:true, isNew:false, image:"anklet", stock:18, reviews:[{author:"Manish P.",rating:5,comment:"Excellent heat distribution and durable build.",date:"2026-02-12"}] },
   { id:3, name:"Non-Slip Kitchen Mats (2 pcs)", category:"Kitchenware", price:699, discount:10, colors:["#F6F4EE","#2E2E2E"], variants:["2 pcs"], description:"Comfortable anti-fatigue mats for kitchen counters. Easy to clean and water-resistant backing for safety.", featured:false, isNew:true, image:"saree2", stock:60, reviews:[{author:"Geeta S.",rating:4,comment:"Makes long cooking sessions easier on the feet.",date:"2026-05-01"}] },
   { id:4, name:"LED Table Lamp with Dimmer", category:"Home Decor", price:2199, discount:10, colors:["#FFD700","#FFFFFF"], variants:["Single"], description:"Sleek LED lamp with adjustable brightness and warm-to-cool light modes. Perfect for bedside or study desks.", featured:true, isNew:true, image:"kids", stock:25, reviews:[{author:"Anil M.",rating:5,comment:"Lovely warm light and smooth dimmer.",date:"2026-03-22"}] },
@@ -12,6 +12,8 @@ const PRODUCTS = [
   { id:10, name:"Multipurpose Storage Organizer (6 bins)", category:"Storage", price:499, discount:0, colors:["#F0F0F0","#333333"], variants:["6 bins"], description:"Stackable fabric organizers with zip closures. Great for closets, shelves, and under-bed storage.", featured:false, isNew:true, image:"blouse", stock:140, reviews:[] },
   { id:11, name:"Ceramic Vase — Decorative", category:"Home Decor", price:899, discount:0, colors:["#DEB887","#8B4513"], variants:["One Size"], description:"Hand-finished ceramic vase with matte glaze — an understated accent for shelves and tables.", featured:false, isNew:true, image:"https://imgs.search.brave.com/nuoePjOOOvt8jlcEULjPw1xc_S1OakljPe-H07_uWsI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9ydWtt/aW5pbTIuZmxpeGNh/cnQuY29tL2ltYWdl/LzYxMi82MTIveGlm/MHEvYmF0aC10b3dl/bC9qLzEvYS9taWNy/b2ZpYmVyLXRvd2Vs/LXF1aWNrLWRyeS1z/dXBlci1hYnNvcmJl/bnQtY29yYWwtZmxl/ZWNlLWJhdGgtb3Jp/Z2luYWwtaW1haGty/ZGt3ZXE0ZnZuZC5q/cGVnP3E9NzA", stock:36, reviews:[] },
   { id:12, name:"F", category:"Home Decor", price:1499, discount:20, colors:["#2F4F4F","#238e5c"], variants:["Small","Medium"], description:"Beautiful framed botanical print with lightweight frame and glass cover. Instant uplift for any wall.", featured:false, isNew:true, image:"https://imgs.search.brave.com/9_FQhEB8_k5CSoNuahAxqmsSHoLxkozDR-fMf_CCQuU/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zcGFj/ZXMuaW4vY2RuL3No/b3AvZmlsZXMvMTA4/MTIwNC0wOS5qcGc_/dj0xNzgxMDA5NzEw/JndpZHRoPTM3Mg", stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
+  { id:13, name:"Water Bottle Kids(2L+700ML+300ML)", category:"Home Goods", price:349, discount:10, colors:["#e524cb","#0d79de","#e9340f"], variants:[], description:"ABC Water Bottles(2L+700ml+300ml) Leak-proof, BPA free Motivational Sports Bottle 3000 ml Plastic Bottle (Pack of 3, Multicolor)", featured:false, isNew:true, image:"https://rukminim2.flixcart.com/image/1536/1536/xif0q/bottle/z/a/m/3000-water-bottles-2l-700ml-300ml-leak-proof-bpa-free-enriched-2-original-imahygdvsfukkwxt.jpeg?q=90", stock:20, reviews:[{author:"Ritika S.",rating:5,comment:"Looks premium and was packaged well.",date:"2026-03-18"}] },
+
 ];
 
 const CATEGORIES = ["All","Kitchenware","Home Goods","Storage","Bathroom utensils","Stationary","Cosmetics"];
@@ -89,6 +91,46 @@ function productSVG(type, color='#8B0000', size=120) {
 /* ─── STAR HTML ─── */
 function starsHTML(rating) {
   return Array.from({length:5},(_,i)=>`<span class="star${i<rating?'':' empty'}">★</span>`).join('');
+}
+
+/* ─── COLOR NAME HELPER (shared) ─── */
+function colorName(hex) {
+  if (!hex) return '';
+  const s = String(hex).trim().toLowerCase();
+  const map = {
+    '#fff8dc':'cream','#ffffff':'white','#000000':'black','#8b0000':'crimson','#b8860b':'gold',
+    '#6b3fa0':'purple','#c0006b':'magenta','#c75000':'orange','#ffd700':'gold','#f5f5f5':'off white',
+    '#20b2aa':'teal','#ff69b4':'pink','#c0a080':'tan','#deb887':'burlywood','#8b4513':'brown',
+    '#2f4f4f':'charcoal','#2e2e2e':'dark gray','#6b8e23':'olive','#1a6b1a':'forest green','#238e5c':'green'
+  };
+  if (map[s]) return map[s].charAt(0).toUpperCase()+map[s].slice(1);
+  function hexToRgb(h) {
+    let v = h.replace('#',''); if (v.length===3) v = v.split('').map(x=>x+x).join('');
+    const n = parseInt(v,16); return {r:(n>>16)&255, g:(n>>8)&255, b:n&255};
+  }
+  const {r,g,b} = hexToRgb(s);
+  const rn=r/255, gn=g/255, bn=b/255;
+  const max=Math.max(rn,gn,bn), min=Math.min(rn,gn,bn);
+  let h=0, s2=0, l=(max+min)/2;
+  if (max!==min) {
+    const d = max-min; s2 = l>0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){case rn: h=(gn-bn)/d + (gn<bn?6:0); break; case gn: h=(bn-rn)/d + 2; break; default: h=(rn-gn)/d + 4;}
+    h = Math.round(h*60);
+  }
+  if (s2 < 0.12) {
+    if (l > 0.9) return 'White';
+    if (l < 0.12) return 'Black';
+    return 'Gray';
+  }
+  if (h < 15 || h >= 345) return 'Red';
+  if (h < 45) return 'Orange';
+  if (h < 70) return 'Yellow';
+  if (h < 150) return 'Green';
+  if (h < 200) return 'Teal';
+  if (h < 260) return 'Blue';
+  if (h < 290) return 'Purple';
+  if (h < 330) return 'Pink';
+  return 'Red';
 }
 
 /* ─── SHARED NAVBAR ─── */
