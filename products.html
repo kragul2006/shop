@@ -32,6 +32,9 @@
 .filter-sort-item.active .radio::after { content: ''; width: 8px; height: 8px; background: var(--crimson); border-radius: 50%; }
 .products-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: gap; }
 .products-header .result-count { font-size: 13px; color: var(--text-muted); }
+/* Top sticky sort bar shown at page start */
+.top-sort-bar { position: sticky; top: calc(var(--nav-h) + 8px); z-index: 90; background: white; padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 8px; align-items: center; overflow-x: auto; }
+.top-sort-bar .filter-sort-item { display: inline-flex; flex: 0 0 auto; margin-right: 6px; }
 .search-bar { position: relative; margin-bottom: 20px; }
 .search-bar input { padding-left: 42px; }
 .search-bar svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
@@ -80,9 +83,9 @@
       <div class="filter-section">
         <h4>Price Range</h4>
         <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:12px">
-          <span>₹500</span><span id="maxPriceLabel">₹5,000</span>
+          <span>₹500</span><span id="maxPriceLabel">₹1,000</span>
         </div>
-        <input type="range" id="priceRange" min="500" max="5000" step="100" value="5000" style="width:100%;accent-color:var(--crimson)">
+        <input type="range" id="priceRange" min="500" max="1000" step="1000" value="1000" style="width:100%;accent-color:var(--crimson)">
       </div>
       <div class="filter-section">
         <h4>Sort By</h4>
@@ -101,6 +104,7 @@
       <div class="products-header">
         <span class="result-count" id="resultCount"></span>
       </div>
+      <div id="topSort" class="top-sort-bar" aria-hidden="false"></div>
       <div class="product-grid" id="productGrid"></div>
     </main>
   </div>
@@ -127,7 +131,7 @@ const SORTS = [
 
 let activeCat = 'All';
 let activeSort = 'default';
-let maxPrice = 5000;
+let maxPrice = 1000;
 let searchQ = '';
 
 // Read URL param for cat
@@ -148,16 +152,17 @@ function renderCatFilters() {
 }
 
 function renderSortFilters() {
-  const el = document.getElementById('sortFilters');
-  el.innerHTML = SORTS.map(s=>`
+  const html = SORTS.map(s=>`
     <button class="filter-sort-item${activeSort===s.key?' active':''}" onclick="setSort('${s.key}')">
       <span class="radio"></span>${s.label}
     </button>`).join('');
+  const el = document.getElementById('sortFilters'); if (el) el.innerHTML = html;
+  const top = document.getElementById('topSort'); if (top) top.innerHTML = html;
 }
 
 function setCat(c) { activeCat=c; renderCatFilters(); applyFilters(); }
 function setSort(s) { activeSort=s; renderSortFilters(); applyFilters(); }
-function clearAll() { activeCat='All'; activeSort='default'; maxPrice=5000; searchQ=''; document.getElementById('priceRange').value=5000; document.getElementById('maxPriceLabel').textContent='₹5,000'; document.getElementById('searchInput').value=''; renderCatFilters(); renderSortFilters(); applyFilters(); }
+function clearAll() { activeCat='All'; activeSort='default'; maxPrice=1000; searchQ=''; document.getElementById('priceRange').value=1000; document.getElementById('maxPriceLabel').textContent='₹1,000'; document.getElementById('searchInput').value=''; renderCatFilters(); renderSortFilters(); applyFilters(); }
 
 // Price range
 document.getElementById('priceRange').addEventListener('input', function(){
@@ -182,11 +187,15 @@ function applyFilters() {
 
   document.getElementById('resultCount').textContent = `${filtered.length} product${filtered.length!==1?'s':''} found`;
 
+  // Ensure sort filters are visible at top: make products header sticky
+  const header = document.querySelector('.products-header');
+  if (header) header.style.position = 'sticky', header.style.top = 'calc(var(--nav-h) + 8px)', header.style.zIndex = 50, header.style.background = 'white', header.style.padding = '8px 0';
+
   // Active chips
   const chips = [];
   if(activeCat!=='All') chips.push(`<div class="active-chip">${activeCat}<button onclick="setCat('All')">✕</button></div>`);
   if(activeSort!=='default') chips.push(`<div class="active-chip">${SORTS.find(s=>s.key===activeSort)?.label}<button onclick="setSort('default')">✕</button></div>`);
-  if(maxPrice<5000) chips.push(`<div class="active-chip">Under ₹${maxPrice.toLocaleString()}<button onclick="()=>{maxPrice=5000;document.getElementById('priceRange').value=5000;document.getElementById('maxPriceLabel').textContent='₹5,000';applyFilters()}">✕</button></div>`);
+  if(maxPrice<1000) chips.push(`<div class="active-chip">Under ₹${maxPrice.toLocaleString()}<button onclick="()=>{maxPrice=1000;document.getElementById('priceRange').value=1000;document.getElementById('maxPriceLabel').textContent='₹1,000';applyFilters()}">✕</button></div>`);
   if(searchQ) chips.push(`<div class="active-chip">"${searchQ}"<button onclick="document.getElementById('searchInput').value='';searchQ='';applyFilters()">✕</button></div>`);
   document.getElementById('activeChips').innerHTML = chips.join('');
 
@@ -219,7 +228,7 @@ function applyFilters() {
           <span class="product-price">₹${fp.toLocaleString()}</span>
           ${p.discount>0?`<span class="product-original">₹${p.price.toLocaleString()}</span>`:''}
         </div>
-        <div class="product-colors">${p.colors.slice(0,5).map(c=>`<div class="product-swatch" style="background:${c}" title="${typeof colorName==='function'?colorName(c):c}" aria-label="${typeof colorName==='function'?colorName(c):c}"></div>`).join('')}</div>
+        <div class="product-colors">${p.colors.map(c=>`<div class="product-swatch" style="background:${c}" title="${typeof colorName==='function'?colorName(c):c}" aria-label="${typeof colorName==='function'?colorName(c):c}"></div>`).join('')}</div>
       </div>
     </a>`;
   }).join('');
