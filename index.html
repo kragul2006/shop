@@ -276,7 +276,6 @@ document.getElementById('featuredGrid').innerHTML = featured.map(p => {
     </div>
   </a>`;
 }).join('');
-
 // Hero Product
 const hero = products.find(p=>p.featured&&p.discount>0) || products[0];
 const heroFP = Math.round(hero.price*(1-hero.discount/100));
