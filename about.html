@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>About Us — Sri Lakshmi Multi Shop</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* Story section */
+.story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.story-visual {
+  background: var(--cream-warm); border-radius: 8px; padding: 50px 36px;
+  text-align: center; border: 1px solid var(--border); position: relative; overflow: hidden;
+}
+.story-visual::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(139,0,0,0.02) 20px,rgba(139,0,0,0.02) 40px);
+}
+.story-visual-inner { position: relative; z-index: 1; }
+.story-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--crimson); margin-bottom: 14px; }
+.story-heading { font-family: var(--font-display); font-size: clamp(22px,3vw,34px); font-weight: 700; color: var(--text-dark); line-height: 1.25; margin-bottom: 20px; }
+.story-text { font-size: 14px; color: var(--text-muted); line-height: 1.9; margin-bottom: 16px; }
+
+/* Values */
+.value-card {
+  text-align: center; padding: 32px 20px; border-radius: 6px; background: white;
+  border: 1px solid var(--border); transition: all 0.3s;
+}
+.value-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(139,0,0,0.08); }
+.value-icon { font-size: 36px; margin-bottom: 14px; }
+.value-title { font-family: var(--font-display); font-size: 18px; color: var(--text-dark); margin-bottom: 10px; }
+.value-desc { font-size: 13px; color: var(--text-muted); line-height: 1.75; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--crimson), rgba(139,0,0,0.1)); }
+.timeline-item { position: relative; margin-bottom: 36px; }
+.timeline-item::before { content: ''; position: absolute; left: -34px; top: 4px; width: 14px; height: 14px; background: var(--crimson); border-radius: 50%; border: 3px solid var(--cream-warm); }
+.timeline-year { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--crimson); margin-bottom: 5px; }
+.timeline-title { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--text-dark); margin-bottom: 5px; }
+.timeline-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+/* Contact section */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.contact-info-item {
+  display: flex; gap: 18px; align-items: flex-start; margin-bottom: 28px;
+}
+.contact-icon-wrap {
+  width: 44px; height: 44px; background: var(--cream-warm); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0; border: 1px solid var(--border);
+}
+.contact-info-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--crimson); margin-bottom: 5px; }
+.contact-info-val { font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+.contact-info-val a { color: var(--crimson); text-decoration: none; }
+.contact-info-val a:hover { text-decoration: underline; }
+
+/* Map placeholder */
+.map-placeholder {
+  background: var(--cream); border: 1px solid var(--border); border-radius: 6px;
+  height: 220px; display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 14px; margin-top: 20px; text-align: center;
+  flex-direction: column; gap: 10px;
+}
+
+/* Team */
+.team-card {
+  text-align: center; padding: 28px 20px;
+  background: white; border: 1px solid var(--border); border-radius: 6px;
+}
+.team-avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--crimson); color: white; margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 24px; font-weight: 700;
+}
+.team-name { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+.team-role { font-size: 12px; color: var(--crimson); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+
+/* CTA banner */
+.cta-banner { background: linear-gradient(135deg,#2c1810,#5a1a1a,#8B0000); padding: 64px 24px; text-align: center; }
+.cta-banner h2 { font-family: var(--font-display); font-size: 36px; color: white; margin-bottom: 14px; }
+.cta-banner p { color: rgba(255,255,255,0.7); font-size: 16px; max-width: 500px; margin: 0 auto 32px; line-height: 1.7; }
+
+@media (max-width: 768px) {
+  .story-grid { grid-template-columns: 1fr; gap: 32px; }
+  .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+</style>
+</head>
+<body>
+<div id="nav-container"></div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1>About Us</h1>
+    <p>A legacy of trust, quality, and cultural heritage since 2017</p>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Home</a> / About Us
+  </div>
+</div>
+
+<!-- STORY -->
+<section class="section">
+  <div class="container">
+    <div class="story-grid">
+      <div>
+        <div class="story-label">Our Story</div>
+        <h2 class="story-heading">Born from a Passion for Home &amp; Comfort</h2>
+          <p class="story-text">Sri Lakshmi Multi Shop was founded in 2017 in Puducherry with a simple mission — to offer thoughtfully selected home essentials that bring comfort, style, and utility to everyday life.</p>
+          <p class="story-text">What began as a small neighbourhood shop has grown into a trusted local destination for cookware, bedding, decor, and smart storage solutions. We curate products from reliable makers and brands to ensure value and durability.</p>
+          <p class="story-text">Every product in our collection is chosen for its quality and usefulness. When you shop with us, you bring home items designed to last and to make daily life a little easier.</p>
+        <div class="flex-center gap-8 mt-32">
+          <a href="products.html" class="btn btn-primary btn-md">Shop Now</a>
+
+        </div>
+      </div>
+      <div class="story-visual">
+        <div class="story-visual-inner">
+          <svg width="180" height="180" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="110" cy="110" r="105" fill="none" stroke="#8B0000" stroke-width="1" stroke-dasharray="5 5" opacity="0.4"/>
+            <circle cx="110" cy="110" r="80" fill="none" stroke="#FFD700" stroke-width="0.7" opacity="0.3"/>
+            <path d="M110,18L122,70L175,52L138,96L180,116L128,122L128,160L110,190L92,160L92,122L40,116L82,96L45,52L98,70Z" fill="#8B0000" opacity="0.85"/>
+            <text x="110" y="204" text-anchor="middle" font-family="'Playfair Display',serif" font-size="16" fill="#2c1810" font-weight="700">Est. 2017</text>
+          </svg>
+          <div style="margin-top:20px;font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text-dark)">Sri Lakshmi</div>
+          <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:5px">Multi Shop • Puducherry</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;text-align:center">
+            <div style="background:white;border-radius:6px;padding:14px;border:1px solid var(--border)"><div style="font-family:var(--font-display);font-size:26px;color:var(--crimson);font-weight:700">7+</div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px">Years</div></div>
+            <div style="background:white;border-radius:6px;padding:14px;border:1px solid var(--border)"><div style="font-family:var(--font-display);font-size:26px;color:var(--crimson);font-weight:700">5K+</div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px">Customers</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section-alt">
+  <div class="container">
+    <div class="section-title">
+      <span class="ornament">❋ ❋ ❋</span>
+      <h2>Our Core Values</h2>
+      <p>The principles that have guided us since day one</p>
+    </div>
+    <div class="grid-4">
+      <div class="value-card"><div class="value-icon">🌟</div><h3 class="value-title">Quality First</h3><p class="value-desc">We never compromise. Every product is personally inspected before it reaches your hands.</p></div>
+      <div class="value-card"><div class="value-icon">🤝</div><h3 class="value-title">Trust & Transparency</h3><p class="value-desc">Honest pricing, no hidden costs. We believe in building relationships, not just transactions.</p></div>
+      <div class="value-card"><div class="value-icon">🏛️</div><h3 class="value-title">Thoughtful Design</h3><p class="value-desc">We prioritise well-designed, functional products that combine quality materials with everyday practicality.</p></div>
+      <div class="value-card"><div class="value-icon">💝</div><h3 class="value-title">Community Care</h3><p class="value-desc">Our success is tied to the communities we serve — both our customers and our artisan partners.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY TIMELINE -->
+<section class="section">
+  <div class="container">
+    <div class="grid-2" style="gap:60px;align-items:start">
+      <div>
+        <div class="section-title" style="text-align:left;margin-bottom:36px">
+          <span class="ornament" style="letter-spacing:6px;font-size:16px">❋ ❋ ❋</span>
+          <h2 style="font-size:clamp(24px,3vw,36px)">Our Journey</h2>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">2017</div>
+            <div class="timeline-title">The Beginning</div>
+            <div class="timeline-desc">Sri Lakshmi Multi Shop opens its doors in White Town, Puducherry, with a small collection of curated home essentials and cookware.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2018</div>
+            <div class="timeline-title">Growing Trust</div>
+            <div class="timeline-desc">Expanded our collection to include kitchenware and home decor. Reached 500+ loyal customers in our first year.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2021</div>
+            <div class="timeline-title">Digital Presence</div>
+            <div class="timeline-desc">Launched our online catalogue to serve customers beyond Puducherry.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2024</div>
+            <div class="timeline-title">5000+ Happy Families</div>
+            <div class="timeline-desc">Celebrated serving over 5000 families. Expanded our bedding and storage categories by popular demand.</div>
+          </div>
+          <div class="timeline-item" style="margin-bottom:0">
+            <div class="timeline-year">Today</div>
+            <div class="timeline-title">Still Growing, Still Caring</div>
+            <div class="timeline-desc">With 500+ products and a team that treats every customer like family, we continue to serve with the same love and passion as day one.</div>
+          </div>
+        </div>
+      </div>
+
+</section>
+
+<!-- CONTACT -->
+<section class="section-alt" id="contact">
+  <div class="container">
+    <div class="section-title">
+      <span class="ornament">❋ ❋ ❋</span>
+      <h2>Get in Touch</h2>
+      <p>We'd love to hear from you — reach out any time</p>
+    </div>
+    <div class="contact-grid">
+      <!-- Contact Info -->
+      <div>
+        <div class="contact-info-item">
+          <div class="contact-icon-wrap">📍</div>
+          <div>
+            <div class="contact-info-label">Address</div>
+            <div class="contact-info-val">Villianur<br>Puducherry — 605 110<br> India</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon-wrap">📞</div>
+          <div>
+            <div class="contact-info-label">Phone</div>
+            <div class="contact-info-val">
+              <a href="tel:+919443012345">+91 94430 12345</a><br>
+              <a href="tel:+919443067890">+91 94430 67890</a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon-wrap">📧</div>
+          <div>
+            <div class="contact-info-label">Email</div>
+            <div class="contact-info-val">
+              <a href="mailto:contact@srilakshmishop.in">contact@srilakshmishop.in</a><br>
+              <a href="mailto:support@srilakshmishop.in">support@srilakshmishop.in</a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon-wrap">🕐</div>
+          <div>
+            <div class="contact-info-label">Store Hours</div>
+            <div class="contact-info-val">
+              Monday – Saturday: 10:00 AM – 9:30 PM<br>
+              Sunday: 10:00 AM – 9:00 PM<br>
+              <em style="color:var(--crimson);font-style:normal;font-size:12px">Open on all public holidays</em>
+            </div>
+          </div>
+        </div>
+        <div class="map-placeholder">
+          <span style="font-size:36px">🗺️</span>
+          <div>
+            <div style="font-weight:700;color:var(--text-dark);margin-bottom:4px">Find Us in White Town</div>
+            <div style="font-size:12px">Villianur</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+    
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <h2>Ready to Explore?</h2>
+  <p>Browse our full collection of home essentials — handpicked for comfort and style.</p>
+  <a href="products.html" class="btn btn-gold btn-xl">Shop All Products</a>
+</div>
+
+<div id="footer-container"></div>
+<button id="scrollTop" aria-label="Scroll to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5,12 12,5 19,12"/></svg>
+</button>
+<div class="toast" id="toast"></div>
+<script src="js/app.js"></script>
+<script>
+document.getElementById('nav-container').innerHTML = renderNavbar('about');
+document.getElementById('footer-container').innerHTML = renderFooter();
+initNavbar();
+
+function submitContact() {
+  const name = document.getElementById('cName').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const msg = document.getElementById('cMsg').value.trim();
+  if (!name || !email || !msg) { showToast('Please fill in all required fields.'); return; }
+  showToast('Message sent! We\'ll get back to you within 24 hours. 🙏');
+  ['cName','cPhone','cEmail','cMsg'].forEach(id=>document.getElementById(id).value='');
+}
+</script>
+</body>
+</html>
