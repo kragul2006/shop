@@ -204,7 +204,7 @@ function applyFilters() {
     const avgR = p.reviews.length ? Math.round(p.reviews.reduce((s,r)=>s+r.rating,0)/p.reviews.length) : 0;
     return `<a href="product.html?id=${p.id}" class="product-card">
       <div class="product-card-img">
-        ${productSVG(p.image,p.colors[0],130)}
+        ${productSVG((p.images && p.images[0]) || p.image,p.colors[0],130)}
         <div class="badge-stack">
           ${p.isNew?`<span class="badge badge-new">New</span>`:''}
           ${p.featured?`<span class="badge badge-featured">Featured</span>`:''}
@@ -219,7 +219,7 @@ function applyFilters() {
           <span class="product-price">₹${fp.toLocaleString()}</span>
           ${p.discount>0?`<span class="product-original">₹${p.price.toLocaleString()}</span>`:''}
         </div>
-        <div class="product-colors">${p.colors.slice(0,5).map(c=>`<div class="product-swatch" style="background:${c}"></div>`).join('')}</div>
+        <div class="product-colors">${p.colors.slice(0,5).map(c=>`<div class="product-swatch" style="background:${c}" title="${typeof colorName==='function'?colorName(c):c}" aria-label="${typeof colorName==='function'?colorName(c):c}"></div>`).join('')}</div>
       </div>
     </a>`;
   }).join('');
